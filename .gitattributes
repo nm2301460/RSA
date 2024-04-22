@@ -57,3 +57,14 @@ def calculate_private_exponent(e, p, q):
     if d < 0:
         d += phi
     return d
+
+def brute_force_private_exponent(e, phi):
+    """Attempt to brute force the private exponent d."""
+    d = 2
+    while True:
+        # Check if the current value of d satisfies the condition (e * d) % phi == 1
+        if (e * d) % phi == 1:
+            return d
+        # Increment d for the next iteration
+        d += 1
+
