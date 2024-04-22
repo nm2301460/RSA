@@ -77,3 +77,71 @@ def rsa_decrypt(ciphertext, private_key):
     """Decrypt a ciphertext using RSA."""
     decrypted_message = pow(ciphertext, private_key[0], private_key[1])
     return decrypted_message
+
+def main():
+    print("RSA Security Analysis: Runtime Comparison\n")
+    # Prompt the user to choose the key size
+    key_size = int(input("Choose the key size (8 or 16 bits): "))
+    # Validate the input key size
+    if key_size not in [8, 16]:
+        print("Invalid key size. Please choose either 8 or 16 bits.")
+        return
+    
+    # Generate RSA keys
+    bits = key_size
+    start_time = time.perf_counter()
+    p = generate_large_prime(bits)
+    q = generate_large_prime(bits)
+    N = p * q
+    e = 65537
+    end_time = time.perf_counter()
+    print("Generated Public Key (N, e):", (N, e))
+    print("Key Generation Time: {:.6f} milliseconds".format((end_time - start_time) * 1000))
+
+    # Factorize the modulus N to obtain prime factors p and q
+    start_time = time.perf_counter()
+    p, q = factorize_modulus(N)
+    end_time = time.perf_counter()
+    print("\nFactored Modulus (p, q):", (p, q))
+    print("Factorization Time: {:.6f} milliseconds".format((end_time - start_time) * 1000))
+    
+    # Calculate phi(N)
+    phi = (p - 1) * (q - 1)
+    # Calculate the private exponent d
+    start_time = time.perf_counter()
+    d = calculate_private_exponent(e, p, q)
+    end_time = time.perf_counter()
+    print("\nCalculated Private Exponent d:", d)
+    print("Private Exponent Calculation Time: {:.6f} milliseconds".format((end_time - start_time) * 1000))
+    
+    # Attempt brute force for 8-bit keys
+    if key_size == 8:
+        start_time = time.perf_counter()
+        brute_force_d = brute_force_private_exponent(e, phi)
+        end_time = time.perf_counter()
+        print("\nBrute Force Private Exponent d:", brute_force_d)
+        print("Brute Force Time: {:.6f} milliseconds".format((end_time - start_time) * 1000))
+    
+    # Optionally attempt brute force for 16-bit keys
+    if key_size == 16:
+        print("\nBrute Force for 16-bit keys is computationally intensive and may take a long time.")
+        choice = input("Do you want to attempt brute force for 16-bit keys? (yes/no): ").lower()
+        if choice == "yes":
+            start_time = time.perf_counter()
+            brute_force_d = brute_force_private_exponent(e, phi)
+            end_time = time.perf_counter()
+            print("\nBrute Force Private Exponent d:", brute_force_d)
+            print("Brute Force Time: {:.6f} milliseconds".format((end_time - start_time) * 1000))
+        else:
+            print("Brute force for 16-bit keys was not attempted.")
+    
+    # Encryption and Decryption
+    print("\n--Encryption and Decryption--")
+    plaintext = int(input("Enter the plaintext message to encrypt (as an integer): "))
+    encrypted_message = rsa_encrypt(plaintext, (e, N))
+    print("Encrypted Message:", encrypted_message)
+    decrypted_message = rsa_decrypt(encrypted_message, (d, N))
+    print("Decrypted Message:", decrypted_message)
+
+if __name__ == "__main__":
+    main()
