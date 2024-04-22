@@ -47,3 +47,13 @@ def factorize_modulus(N):
     for i in range(2, int(math.sqrt(N)) + 1):
         if N % i == 0:
             return i, N // i
+
+def calculate_private_exponent(e, p, q):
+    """Calculate the private exponent d given the public exponent e and prime factors p and q."""
+    phi = (p - 1) * (q - 1)
+    # Calculate the modular inverse using the extended Euclidean algorithm
+    gcd_val, d, _ = extended_gcd(e, phi)
+    d %= phi
+    if d < 0:
+        d += phi
+    return d
