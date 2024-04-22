@@ -68,3 +68,12 @@ def brute_force_private_exponent(e, phi):
         # Increment d for the next iteration
         d += 1
 
+def rsa_encrypt(message, public_key):
+    """Encrypt a message using RSA."""
+    encrypted_message = pow(message, public_key[0], public_key[1])
+    return encrypted_message
+
+def rsa_decrypt(ciphertext, private_key):
+    """Decrypt a ciphertext using RSA."""
+    decrypted_message = pow(ciphertext, private_key[0], private_key[1])
+    return decrypted_message
