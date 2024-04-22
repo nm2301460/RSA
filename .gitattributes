@@ -42,4 +42,8 @@ def extended_gcd(a, b):
         gcd_val, x, y = extended_gcd(b % a, a)
         return (gcd_val, y - (b // a) * x, x)
 
-
+def factorize_modulus(N):
+    """Factorize the modulus N into its prime factors."""
+    for i in range(2, int(math.sqrt(N)) + 1):
+        if N % i == 0:
+            return i, N // i
