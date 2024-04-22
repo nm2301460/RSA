@@ -26,3 +26,20 @@ def is_prime(n):
         # Check if the number is prime
         if is_prime(p):
             return p
+
+def gcd(a, b):
+    """Calculate the greatest common divisor of two numbers using the Euclidean algorithm."""
+    while b != 0:
+        a, b = b, a % b
+    return a
+
+def extended_gcd(a, b):
+    """Calculate the extended Euclidean algorithm to find the modular inverse."""
+    if a == 0:
+        return b, 0, 1
+    else:
+        # Recursively call the extended Euclidean algorithm
+        gcd_val, x, y = extended_gcd(b % a, a)
+        return (gcd_val, y - (b // a) * x, x)
+
+
